@@ -5,6 +5,7 @@
 
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './components/AuthProvider';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -25,7 +26,8 @@ const HomeRedirect = () => {
 
 export default function App() {
   return (
-    <AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
       <Router>
         <Routes>
           <Route path="/login/*" element={<Login />} />
@@ -61,7 +63,7 @@ export default function App() {
           <Route 
             path="/customer/*" 
             element={
-              <ProtectedRoute allowedRoles={['customer']}>
+              <ProtectedRoute allowedRoles={['customer', 'admin']}>
                 <CustomerDashboard />
               </ProtectedRoute>
             } 
@@ -70,6 +72,7 @@ export default function App() {
           <Route path="/" element={<HomeRedirect />} />
         </Routes>
       </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }

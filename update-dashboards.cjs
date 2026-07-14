@@ -1,64 +1,32 @@
 const fs = require('fs');
 let content = fs.readFileSync('src/pages/Dashboards.tsx', 'utf8');
 
-content = content.replace("import VendorOrders from '../components/VendorOrders';", "import VendorOrders from '../components/VendorOrders';\nimport VendorSettings from '../components/VendorSettings';");
+// Replace CustomerDashboard completely
+const customerRegex = /export function CustomerDashboard\(\) \{[\s\S]*\}\n/m;
+const newCustomerDashboard = `
+import { Routes, Route } from 'react-router-dom';
+import CustomerLayout from '../components/CustomerLayout';
+import CustomerHome from './CustomerHome';
+import CustomerCategories from './CustomerCategories';
+import CustomerProduct from './CustomerProduct';
+import CustomerCart from './CustomerCart';
 
-const oldVendorDashboard = `export function VendorDashboard() {
-  const { user } = useAuth();
+export function CustomerDashboard() {
   return (
-    <div className="p-8 max-w-7xl mx-auto w-full">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Vendor Dashboard</h1>
-        <LogoutButton />
-      </div>
-      <p className="mt-4 text-gray-600">Welcome back, Vendor {user?.email}</p>
-      <VendorOrders />
-      <VendorProducts />
-    </div>
+    <CustomerLayout>
+      <Routes>
+        <Route path="/" element={<CustomerHome />} />
+        <Route path="/categories" element={<CustomerCategories />} />
+        <Route path="/product/:id" element={<CustomerProduct />} />
+        <Route path="/cart" element={<CustomerCart />} />
+        <Route path="/orders" element={<div className="w-full px-margin-mobile md:px-margin-desktop py-lg"><CustomerOrders /></div>} />
+      </Routes>
+    </CustomerLayout>
   );
-}`;
+}
+`;
 
-const newVendorDashboard = `export function VendorDashboard() {
-  const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<'orders' | 'products' | 'settings'>('orders');
+content = content.replace(customerRegex, newCustomerDashboard);
 
-  return (
-    <div className="p-8 max-w-7xl mx-auto w-full">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Vendor Dashboard</h1>
-        <LogoutButton />
-      </div>
-
-      <div className="flex items-center space-x-6 border-b pb-4 mb-4">
-        <button 
-          onClick={() => setActiveTab('orders')}
-          className={\`font-medium \${activeTab === 'orders' ? 'text-blue-600' : 'text-gray-500 hover:text-gray-900'}\`}
-        >
-          Orders
-        </button>
-        <button 
-          onClick={() => setActiveTab('products')}
-          className={\`font-medium \${activeTab === 'products' ? 'text-blue-600' : 'text-gray-500 hover:text-gray-900'}\`}
-        >
-          Products
-        </button>
-        <button 
-          onClick={() => setActiveTab('settings')}
-          className={\`font-medium \${activeTab === 'settings' ? 'text-blue-600' : 'text-gray-500 hover:text-gray-900'}\`}
-        >
-          Settings
-        </button>
-      </div>
-
-      <p className="text-gray-600 mb-4">Welcome back, Vendor {user?.email}</p>
-
-      {activeTab === 'orders' && <VendorOrders />}
-      {activeTab === 'products' && <VendorProducts />}
-      {activeTab === 'settings' && <VendorSettings />}
-    </div>
-  );
-}`;
-
-content = content.replace(oldVendorDashboard, newVendorDashboard);
-
-fs.writeFileSync('src/pages/Dashboards.tsx', content);
+// I need to make sure the imports at the top are updated, but since I am injecting the new components I will just add the imports.
+// Actually I included the imports in the replacement block above which will put them in the middle of the file. That's fine for TypeScript/Vite, but let's fix it properly.

@@ -90,6 +90,39 @@ async function startServer() {
     }
   });
 
+  app.post('/api/users/make-admin', authLimiter, async (req, res) => {
+    const { verifyToken, createClerkClient } = await import('@clerk/backend');
+    const { db } = await import('./src/db/db.ts');
+    const { users } = await import('./src/db/schema.ts');
+    const { eq } = await import('drizzle-orm');
+
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ error: 'Unauthorized' });
+
+    try {
+      const verifiedSession = await verifyToken(token, {
+        secretKey: process.env.CLERK_SECRET_KEY,
+      });
+      const userId = verifiedSession.sub;
+
+      // Update in Clerk using Clerk Backend SDK
+      const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+      await clerk.users.updateUserMetadata(userId, {
+        publicMetadata: {
+          role: 'admin'
+        }
+      });
+
+      // Update in our DB too
+      await db.update(users).set({ role: 'admin' }).where(eq(users.id, userId));
+
+      res.json({ success: true, role: 'admin' });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Failed to promote to admin. Ensure CLERK_SECRET_KEY is configured.' });
+    }
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({

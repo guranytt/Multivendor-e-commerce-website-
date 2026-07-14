@@ -167,7 +167,7 @@ export default function VendorProducts() {
   if (vendorStatus === 'pending') {
     return (
       <div className="mt-8 bg-yellow-50 p-6 rounded-lg border border-yellow-200">
-        <h2 className="text-xl font-semibold text-yellow-800">Application Pending</h2>
+        <h2 className="font-headline-md text-headline-md text-on-surface text-yellow-800">Application Pending</h2>
         <p className="text-yellow-700 mt-2">Your vendor application is currently under review by an admin. You will be able to manage products once approved.</p>
       </div>
     );
@@ -176,50 +176,50 @@ export default function VendorProducts() {
   if (vendorStatus !== 'approved') return null;
 
   return (
-    <div className="mt-8 bg-white p-6 rounded-lg shadow">
-      <h2 className="text-xl font-semibold mb-4">Manage Products</h2>
+    <div className="mt-8 bg-surface-white p-6 rounded-lg shadow">
+      <h2 className="font-headline-md text-headline-md text-on-surface mb-4">Manage Products</h2>
       
       <form onSubmit={handleSubmit} className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 items-end border-b pb-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Title</label>
-          <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+          <label className="block font-label-md text-label-md text-on-surface text-on-surface">Title</label>
+          <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} className="mt-1 block w-full border border-surface-variant rounded-md p-2" />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Category</label>
-          <select required value={categoryId} onChange={(e) => setCategoryId(e.target.value)} className="mt-1 block w-full border border-gray-300 rounded-md p-2">
+          <label className="block font-label-md text-label-md text-on-surface text-on-surface">Category</label>
+          <select required value={categoryId} onChange={(e) => setCategoryId(e.target.value)} className="mt-1 block w-full border border-surface-variant rounded-md p-2">
             <option value="">Select category...</option>
             {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Price (in cents)</label>
-          <input type="number" required min="1" value={priceCents} onChange={(e) => setPriceCents(e.target.value)} className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+          <label className="block font-label-md text-label-md text-on-surface text-on-surface">Price (in cents)</label>
+          <input type="number" required min="1" value={priceCents} onChange={(e) => setPriceCents(e.target.value)} className="mt-1 block w-full border border-surface-variant rounded-md p-2" />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Inventory Count</label>
-          <input type="number" required min="0" value={inventoryCount} onChange={(e) => setInventoryCount(e.target.value)} className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+          <label className="block font-label-md text-label-md text-on-surface text-on-surface">Inventory Count</label>
+          <input type="number" required min="0" value={inventoryCount} onChange={(e) => setInventoryCount(e.target.value)} className="mt-1 block w-full border border-surface-variant rounded-md p-2" />
         </div>
         <div className="sm:col-span-2 lg:col-span-3">
-          <label className="block text-sm font-medium text-gray-700">Images</label>
+          <label className="block font-label-md text-label-md text-on-surface text-on-surface">Images</label>
           <div className="flex gap-2 mt-2 overflow-x-auto">
             {images.map((img, idx) => (
               <div key={idx} className="relative group">
                 <img src={img.url} alt="Product upload" className="h-20 w-20 object-cover rounded-md border" />
               </div>
             ))}
-            <label className="h-20 w-20 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50">
-              <span className="text-gray-500 text-2xl">+</span>
+            <label className="h-20 w-20 flex items-center justify-center border-2 border-dashed border-surface-variant rounded-md cursor-pointer hover:bg-surface-container-low">
+              <span className="text-on-surface-variant text-2xl">+</span>
               <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploadingImage} />
             </label>
           </div>
-          {uploadingImage && <p className="text-sm text-gray-500 mt-1">Uploading...</p>}
+          {uploadingImage && <p className="text-sm text-on-surface-variant mt-1">Uploading...</p>}
         </div>
         <div className="sm:col-span-2 lg:col-span-3">
-          <label className="block text-sm font-medium text-gray-700">Description</label>
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="mt-1 block w-full border border-gray-300 rounded-md p-2" rows={2} />
+          <label className="block font-label-md text-label-md text-on-surface text-on-surface">Description</label>
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="mt-1 block w-full border border-surface-variant rounded-md p-2" rows={2} />
         </div>
         <div className="sm:col-span-2 lg:col-span-3">
-          <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
+          <button type="submit" disabled={loading} className="w-full bg-action-orange text-white text-white p-2 rounded hover:bg-primary">
             {editingId ? 'Update' : 'Add'} Product
           </button>
         </div>
@@ -227,27 +227,27 @@ export default function VendorProducts() {
 
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+          <thead className="bg-surface-container-low">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price (Cents)</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-on-surface-variant uppercase">Title</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-on-surface-variant uppercase">Price (Cents)</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-on-surface-variant uppercase">Stock</th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-on-surface-variant uppercase">Actions</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-surface-white divide-y divide-gray-200">
             {products.map((p) => (
               <tr key={p.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{p.title}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{p.priceCents}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{p.inventoryCount}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <button onClick={() => handleEdit(p)} className="text-blue-600 hover:text-blue-900 mr-4">Edit</button>
+                <td className="px-6 py-4 whitespace-nowrap font-label-md text-label-md text-on-surface text-on-surface">{p.title}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">{p.priceCents}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">{p.inventoryCount}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-right font-label-md text-label-md text-on-surface">
+                  <button onClick={() => handleEdit(p)} className="text-action-orange hover:text-blue-900 mr-4">Edit</button>
                 </td>
               </tr>
             ))}
             {products.length === 0 && (
-              <tr><td colSpan={4} className="px-6 py-4 text-center text-sm text-gray-500">No products added yet</td></tr>
+              <tr><td colSpan={4} className="px-6 py-4 text-center text-sm text-on-surface-variant">No products added yet</td></tr>
             )}
           </tbody>
         </table>

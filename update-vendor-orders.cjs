@@ -1,27 +1,26 @@
 const fs = require('fs');
 let content = fs.readFileSync('src/components/VendorOrders.tsx', 'utf8');
 
-// Add Payout Status header
+// The file already has loading state `const [loading, setLoading] = useState(true);`
+// Let's check how it handles it. It probably does `if (loading) return <div>Loading...</div>;`
 content = content.replace(
-  '<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>',
-  '<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fulfillment</th>\n              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Payout</th>'
+  "if (loading) return <div>Loading orders...</div>;",
+  `if (loading) return (
+    <div className="flex justify-center py-12">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    </div>
+  );`
 );
-
-// Add Payout Status cell
-content = content.replace(
-  '<td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">',
-  `<td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <span className={\`px-2 inline-flex text-xs leading-5 font-semibold rounded-full \${
-                    o.vendorOrder.payoutStatus === 'paid' ? 'bg-green-100 text-green-800' :
-                    'bg-red-100 text-red-800'
-                  }\`}>
-                    {o.vendorOrder.payoutStatus}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">`
-);
-
-// Change colSpan if no orders found
-content = content.replace('colSpan={5}', 'colSpan={6}');
 
 fs.writeFileSync('src/components/VendorOrders.tsx', content);
+
+let content2 = fs.readFileSync('src/components/CustomerOrders.tsx', 'utf8');
+content2 = content2.replace(
+  "if (loading) return <div>Loading orders...</div>;",
+  `if (loading) return (
+    <div className="flex justify-center py-12">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    </div>
+  );`
+);
+fs.writeFileSync('src/components/CustomerOrders.tsx', content2);

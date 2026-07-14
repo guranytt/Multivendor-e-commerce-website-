@@ -50,36 +50,36 @@ export default function AdminVendors() {
   };
 
   return (
-    <div className="mt-8 bg-white p-6 rounded-lg shadow">
-      <h2 className="text-xl font-semibold mb-4">Manage Vendors</h2>
+    <div className="mt-8 bg-surface-white p-6 rounded-lg shadow">
+      <h2 className="font-headline-md text-headline-md text-on-surface mb-4">Manage Vendors</h2>
       
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+          <thead className="bg-surface-container-low">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Shop Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bank Details</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-on-surface-variant uppercase tracking-wider">Shop Name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-on-surface-variant uppercase tracking-wider">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-on-surface-variant uppercase tracking-wider">Bank Details</th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-on-surface-variant uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-surface-white divide-y divide-gray-200">
             {vendors.map((vendor) => (
               <tr key={vendor.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{vendor.shopName}</td>
+                <td className="px-6 py-4 whitespace-nowrap font-label-md text-label-md text-on-surface text-on-surface">{vendor.shopName}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                   <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    vendor.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                    vendor.status === 'approved' ? 'bg-[#d1fae5] text-[#065f46]' : 'bg-yellow-100 text-yellow-800'
                   }`}>
                     {vendor.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">
                   {vendor.bankName} - {vendor.bankAccountNumber}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <td className="px-6 py-4 whitespace-nowrap text-right font-label-md text-label-md text-on-surface">
                   {vendor.status === 'pending' && (
-                    <button onClick={() => handleApprove(vendor.id)} className="text-blue-600 hover:text-blue-900">
+                    <button onClick={() => handleApprove(vendor.id)} className="text-action-orange hover:text-blue-900">
                       Approve
                     </button>
                   )}
@@ -88,7 +88,7 @@ export default function AdminVendors() {
             ))}
             {vendors.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-6 py-4 text-center text-sm text-gray-500">No vendors found</td>
+                <td colSpan={4} className="px-6 py-4 text-center text-sm text-on-surface-variant">No vendors found</td>
               </tr>
             )}
           </tbody>

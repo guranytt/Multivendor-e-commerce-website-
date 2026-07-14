@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { db } from '../db/db';
 import { products, vendors } from '../db/schema';
-import { eq, and, ilike, or } from 'drizzle-orm';
+import { eq, and, sql } from 'drizzle-orm';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 import fs from 'fs';
@@ -117,13 +117,13 @@ router.get('/', async (req: any, res: any) => {
     const { search } = req.query;
     let query = db.select().from(products);
     
-    if (search && typeof search === 'string') {
-      const searchTerm = `%${search}%`;
+    if (search && typeof search === 'string' && search.trim() !== '') {
+      // Postgres Full-Text Search
+      // Using english dictionary to stem words
+      const tsQuery = search.trim().split(/\s+/).map(word => word + ':*').join(' & ');
+      
       query = query.where(
-        or(
-          ilike(products.title, searchTerm),
-          ilike(products.description, searchTerm)
-        )
+        sql`to_tsvector('english', ${products.title} || ' ' || coalesce(${products.description}, '')) @@ to_tsquery('english', ${tsQuery})`
       ) as any;
     }
     
