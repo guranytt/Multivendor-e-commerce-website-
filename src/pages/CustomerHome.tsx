@@ -165,7 +165,7 @@ export default function CustomerHome() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="inline-block px-3 py-1 bg-action-orange text-white font-label-xs text-xs rounded-full mb-4 w-fit uppercase tracking-widest font-bold"
+                className="inline-block px-4 py-1.5 bg-action-orange text-white text-xs font-black uppercase tracking-widest rounded-full mb-6 w-fit"
               >
                 {HERO_ADS[activeSlide].tag}
               </motion.span>
@@ -173,7 +173,7 @@ export default function CustomerHome() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="font-display-lg text-display-lg text-white mb-4 leading-tight font-black"
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white mb-6 leading-none tracking-tight font-sans drop-shadow-sm"
               >
                 {HERO_ADS[activeSlide].title}
               </motion.h1>
@@ -181,7 +181,7 @@ export default function CustomerHome() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="font-body-lg text-body-lg text-neutral-300 mb-8 max-w-lg leading-relaxed"
+                className="text-base sm:text-lg md:text-xl text-neutral-200 mb-10 max-w-2xl leading-relaxed font-light"
               >
                 {HERO_ADS[activeSlide].description}
               </motion.p>
@@ -279,10 +279,18 @@ export default function CustomerHome() {
                   <motion.div key={c.id} variants={itemVariants} className="col-span-2 row-span-2">
                     <Link to={`/customer/categories?id=${c.id}`} className="block relative h-64 md:h-[420px] rounded-2xl overflow-hidden ambient-shadow group card-hover bg-surface-white">
                       <img className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://images.unsplash.com/photo-1558089687-f282ffcbc126?q=80&w=2071&auto=format&fit=crop" alt={c.name} />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-                      <div className="absolute bottom-0 left-0 p-6 md:p-8">
-                        <h3 className="font-headline-md text-headline-md text-white mb-2">{c.name}</h3>
-                        <p className="font-body-md text-body-md text-white/80 hidden md:block font-light">Upgrade your lifestyle with {c.name.toLowerCase()}.</p>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                      <div className="absolute bottom-0 left-0 p-6 md:p-10 w-full z-10">
+                        <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-action-orange text-white text-[10px] font-black uppercase tracking-widest mb-4 shadow-lg shadow-orange-600/35">
+                          <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                          🔥 PREMIUM SELECTION
+                        </div>
+                        <h3 className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-3 uppercase leading-none drop-shadow-lg">
+                          {c.name}
+                        </h3>
+                        <p className="font-body-md text-sm md:text-base text-slate-100 hidden md:block font-light max-w-lg leading-relaxed opacity-95 drop-shadow">
+                          Curated from the finest verified local artisans and top-tier Nigerian vendors. Guaranteed quality backed by our platform escrow security.
+                        </p>
                       </div>
                     </Link>
                   </motion.div>
@@ -333,14 +341,14 @@ export default function CustomerHome() {
               <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center text-white shrink-0 backdrop-blur-sm">
                 <span className="material-symbols-outlined text-[32px]">{MINI_ADS[activeMiniAd].icon}</span>
               </div>
-              <div className="space-y-1 text-center md:text-left">
-                <span className="text-xs uppercase font-bold tracking-wider bg-white/25 text-white px-2.5 py-0.5 rounded-full inline-block">
+              <div className="space-y-2 text-center md:text-left flex-grow">
+                <span className="text-xs uppercase font-black tracking-widest bg-white/20 text-white px-3 py-1 rounded-full inline-block">
                   {MINI_ADS[activeMiniAd].highlight}
                 </span>
-                <h3 className="font-headline-md text-headline-md text-white font-black">
+                <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white leading-none tracking-tight">
                   {MINI_ADS[activeMiniAd].title}
                 </h3>
-                <p className="font-body-sm text-sm text-white/90 max-w-2xl leading-relaxed">
+                <p className="text-sm sm:text-base md:text-lg text-white/90 max-w-3xl leading-relaxed font-light">
                   {MINI_ADS[activeMiniAd].desc}
                 </p>
               </div>

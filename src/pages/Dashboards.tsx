@@ -11,11 +11,11 @@ import { SignOutButton } from '@clerk/clerk-react';
 import CustomerLayout from '../components/CustomerLayout';
 import AdminLayout from '../components/AdminLayout';
 import VendorLayout from '../components/VendorLayout';
-
 import CustomerHome from './CustomerHome';
 import CustomerCategories from './CustomerCategories';
 import CustomerProduct from './CustomerProduct';
 import CustomerCart from './CustomerCart';
+import { ProtectedRoute } from '../components/ProtectedRoute';
 
 const LogoutButton = () => (
   <SignOutButton>
@@ -55,8 +55,16 @@ export function CustomerDashboard() {
         <Route path="/" element={<CustomerHome />} />
         <Route path="/categories" element={<CustomerCategories />} />
         <Route path="/product/:id" element={<CustomerProduct />} />
-        <Route path="/cart" element={<CustomerCart />} />
-        <Route path="/orders" element={<div className="w-full px-margin-mobile md:px-margin-desktop py-lg"><CustomerOrders /></div>} />
+        <Route path="/cart" element={
+          <ProtectedRoute allowedRoles={['customer', 'admin']}>
+            <CustomerCart />
+          </ProtectedRoute>
+        } />
+        <Route path="/orders" element={
+          <ProtectedRoute allowedRoles={['customer', 'admin']}>
+            <div className="w-full px-margin-mobile md:px-margin-desktop py-lg"><CustomerOrders /></div>
+          </ProtectedRoute>
+        } />
       </Routes>
     </CustomerLayout>
   );

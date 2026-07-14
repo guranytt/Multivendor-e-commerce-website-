@@ -57,11 +57,22 @@ export default function CustomerHeader({ cartCount }: { cartCount: number }) {
               </span>
             )}
           </Link>
-          <SignOutButton>
-            <button className="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border-2 border-transparent hover:border-action-orange transition-all flex items-center justify-center">
-              <span className="material-symbols-outlined">person</span>
-            </button>
-          </SignOutButton>
+          {user ? (
+            <SignOutButton>
+              <button className="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border-2 border-transparent hover:border-action-orange transition-all flex items-center justify-center">
+                <span className="material-symbols-outlined">person</span>
+              </button>
+            </SignOutButton>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link to="/login" className="text-on-surface font-label-md text-label-md hover:bg-surface-variant/5 px-4 py-2 rounded-lg transition-all duration-200">
+                Log In
+              </Link>
+              <Link to="/sign-up" className="bg-action-orange text-white font-label-md text-label-md hover:bg-orange-600 px-4 py-2 rounded-lg transition-all duration-200 shadow-sm">
+                Sign Up
+              </Link>
+            </div>
+          )}
         </nav>
 
         {/* Mobile Actions */}
@@ -69,11 +80,17 @@ export default function CustomerHeader({ cartCount }: { cartCount: number }) {
           <button className="p-2 text-on-surface-variant hover:bg-surface-variant/5 rounded-full transition-colors">
             <span className="material-symbols-outlined">search</span>
           </button>
-          <SignOutButton>
-            <button className="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-transparent flex items-center justify-center">
-              <span className="material-symbols-outlined">person</span>
-            </button>
-          </SignOutButton>
+          {user ? (
+            <SignOutButton>
+              <button className="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-transparent flex items-center justify-center">
+                <span className="material-symbols-outlined">person</span>
+              </button>
+            </SignOutButton>
+          ) : (
+            <Link to="/sign-up" className="bg-action-orange text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">
+              Sign Up
+            </Link>
+          )}
         </div>
       </div>
 
@@ -187,13 +204,32 @@ export default function CustomerHeader({ cartCount }: { cartCount: number }) {
               </nav>
 
               {/* Drawer Footer / Logout */}
-              <div className="pt-6 border-t border-surface-variant/50">
-                <SignOutButton>
-                  <button className="w-full flex items-center justify-center gap-2 bg-surface-container-high hover:bg-error-red hover:text-white dark:hover:bg-error-red text-on-surface font-label-md text-label-md py-3 rounded-xl transition-all">
-                    <span className="material-symbols-outlined text-[20px]">logout</span>
-                    Sign Out
-                  </button>
-                </SignOutButton>
+              <div className="pt-6 border-t border-surface-variant/50 flex flex-col gap-3">
+                {user ? (
+                  <SignOutButton>
+                    <button className="w-full flex items-center justify-center gap-2 bg-surface-container-high hover:bg-error-red hover:text-white dark:hover:bg-error-red text-on-surface font-label-md text-label-md py-3 rounded-xl transition-all">
+                      <span className="material-symbols-outlined text-[20px]">logout</span>
+                      Sign Out
+                    </button>
+                  </SignOutButton>
+                ) : (
+                  <>
+                    <Link 
+                      to="/login"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="w-full flex items-center justify-center gap-2 bg-surface-container-high text-on-surface font-label-md text-label-md py-3 rounded-xl transition-all"
+                    >
+                      Log In
+                    </Link>
+                    <Link 
+                      to="/sign-up"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="w-full flex items-center justify-center gap-2 bg-action-orange text-white font-label-md text-label-md py-3 rounded-xl transition-all shadow-sm"
+                    >
+                      Sign Up
+                    </Link>
+                  </>
+                )}
               </div>
             </motion.div>
           </>
