@@ -1,0 +1,6 @@
+{
+  "name": "Multivendor Marketplace MVP",
+  "description": "A multivendor e-commerce platform with customer, vendor, and admin roles. Built with React, Express, Vite, and Supabase.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
