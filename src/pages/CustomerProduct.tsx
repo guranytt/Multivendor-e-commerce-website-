@@ -111,7 +111,7 @@ export default function CustomerProduct() {
             
             {/* Price */}
             <div className="flex items-end gap-3 pb-md border-b border-surface-variant">
-              <span className="font-display-lg text-display-lg text-success-emerald font-bold">${(product.priceCents / 100).toFixed(2)}</span>
+              <span className="font-display-lg text-display-lg text-success-emerald font-bold">₦{(product.priceCents / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </div>
             
             {/* Description */}

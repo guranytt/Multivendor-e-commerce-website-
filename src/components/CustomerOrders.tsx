@@ -52,7 +52,7 @@ export default function CustomerOrders() {
                 </div>
                 <div>
                   <p className="text-sm text-on-surface-variant">Total</p>
-                  <p className="font-medium text-on-surface">${(order.totalCents / 100).toFixed(2)}</p>
+                  <p className="font-medium text-on-surface">₦{(order.totalCents / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                 </div>
                 <div>
                   <p className="text-sm text-on-surface-variant">Reference</p>
@@ -66,7 +66,7 @@ export default function CustomerOrders() {
                     <div key={vo.id} className="border border-surface-variant rounded p-4 flex justify-between items-center">
                       <div>
                         <p className="font-medium text-on-surface">{vo.vendorShopName}</p>
-                        <p className="text-sm text-on-surface-variant">Subtotal: ${(vo.subtotalCents / 100).toFixed(2)}</p>
+                        <p className="text-sm text-on-surface-variant">Subtotal: ₦{(vo.subtotalCents / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                       </div>
                       <div className="text-right">
                         <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${

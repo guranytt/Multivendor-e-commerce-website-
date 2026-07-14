@@ -14,8 +14,12 @@ export default function CustomerLayout({ children }: { children: ReactNode }) {
   const location = useLocation();
 
   useEffect(() => {
-    fetchCartCount();
-  }, [location]);
+    if (user) {
+      fetchCartCount();
+    } else {
+      setCartCount(0);
+    }
+  }, [location, user]);
 
   const fetchCartCount = async () => {
     const token = await getToken();

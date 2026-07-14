@@ -139,10 +139,10 @@ export default function CustomerCart() {
                             </div>
                         </div>
                         <div className="col-span-1 md:col-span-2 text-right hidden md:block">
-                            <span className="font-body-lg text-body-lg text-on-surface">${(item.product.priceCents / 100).toFixed(2)}</span>
+                            <span className="font-body-lg text-body-lg text-on-surface">₦{(item.product.priceCents / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         </div>
                         <div className="col-span-1 md:col-span-2 text-right">
-                            <span className="font-title-lg text-title-lg text-success-emerald">${((item.product.priceCents * item.quantity) / 100).toFixed(2)}</span>
+                            <span className="font-title-lg text-title-lg text-success-emerald">₦{((item.product.priceCents * item.quantity) / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         </div>
                     </div>
                   </div>
@@ -158,12 +158,12 @@ export default function CustomerCart() {
                   <div className="space-y-sm mb-lg">
                       <div className="flex justify-between items-center font-body-md text-body-md text-on-surface">
                           <span>Subtotal ({totalItems} items)</span>
-                          <span>${(subtotalCents / 100).toFixed(2)}</span>
+                          <span>₦{(subtotalCents / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                       </div>
                   </div>
                   <div className="pt-md border-t border-surface-variant flex justify-between items-center mb-lg">
                       <span className="font-headline-md text-headline-md text-text-dark">Total</span>
-                      <span className="font-headline-md text-headline-md text-primary">${(subtotalCents / 100).toFixed(2)}</span>
+                      <span className="font-headline-md text-headline-md text-primary">₦{(subtotalCents / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                   </div>
                   <button 
                     onClick={handleCheckout}

@@ -7,7 +7,17 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     <div className="bg-background-slate min-h-screen text-on-surface font-body-md antialiased flex flex-col">
       <header className="sticky top-0 w-full z-50 bg-surface-white border-b border-surface-variant h-16 flex items-center justify-between px-margin-desktop">
         <div className="flex items-center gap-md">
-          <span className="font-title-lg text-title-lg font-black text-on-surface"><span className="text-action-orange">Naija Online Stores</span> Admin</span>
+          <div className="flex items-center gap-2">
+            <img 
+              src="https://res.cloudinary.com/dqpjjfsya/image/upload/v1780680415/IMG_20260605_180310_438_ztopwj.png" 
+              alt="Naija Online Stores Logo" 
+              className="h-8 w-8 object-contain rounded-md"
+              referrerPolicy="no-referrer"
+            />
+            <span className="font-title-lg text-title-lg font-black text-on-surface">
+              <span className="text-action-orange">Naija Online Stores</span> Admin
+            </span>
+          </div>
         </div>
         <div className="flex items-center gap-md">
           <SignOutButton>

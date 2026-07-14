@@ -59,6 +59,29 @@ const MINI_ADS = [
   }
 ];
 
+const getCategoryImage = (name: string, index: number) => {
+  const normalized = name.toLowerCase();
+  if (normalized.includes('wear') || normalized.includes('cloth') || normalized.includes('fabric') || normalized.includes('ankara')) {
+    return "https://images.unsplash.com/photo-1590075865003-e48277adc558?q=80&w=800&auto=format&fit=crop";
+  }
+  if (normalized.includes('elect') || normalized.includes('gadget') || normalized.includes('phone') || normalized.includes('tech')) {
+    return "https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=800&auto=format&fit=crop";
+  }
+  if (normalized.includes('furnit') || normalized.includes('home') || normalized.includes('decor')) {
+    return "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=800&auto=format&fit=crop";
+  }
+  if (normalized.includes('craft') || normalized.includes('art') || normalized.includes('handmade')) {
+    return "https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=800&auto=format&fit=crop";
+  }
+  const images = [
+    "https://images.unsplash.com/photo-1558089687-f282ffcbc126?q=80&w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1468495244123-6c6c332eeece?q=80&w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=800&auto=format&fit=crop"
+  ];
+  return images[index % images.length];
+};
+
 export default function CustomerHome() {
   const [categories, setCategories] = useState<any[]>([]);
   const [trendingProducts, setTrendingProducts] = useState<any[]>([]);
@@ -123,8 +146,17 @@ export default function CustomerHome() {
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 80, damping: 15 } }
+    hidden: { opacity: 0, y: 50 },
+    show: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        type: 'spring', 
+        stiffness: 70, 
+        damping: 18,
+        mass: 1.1
+      } 
+    }
   };
 
   const slideVariants = {
@@ -258,13 +290,14 @@ export default function CustomerHome() {
         ) : (
           <motion.div 
             initial="hidden"
-            animate="show"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.1 }}
             variants={{
               hidden: { opacity: 0 },
               show: {
                 opacity: 1,
                 transition: {
-                  staggerChildren: 0.1
+                  staggerChildren: 0.15
                 }
               }
             }}
@@ -278,8 +311,8 @@ export default function CustomerHome() {
                 return (
                   <motion.div key={c.id} variants={itemVariants} className="col-span-2 row-span-2">
                     <Link to={`/customer/categories?id=${c.id}`} className="block relative h-64 md:h-[420px] rounded-2xl overflow-hidden ambient-shadow group card-hover bg-surface-white">
-                      <img className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://images.unsplash.com/photo-1558089687-f282ffcbc126?q=80&w=2071&auto=format&fit=crop" alt={c.name} />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                      <img className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src={getCategoryImage(c.name, i)} alt={c.name} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent"></div>
                       <div className="absolute bottom-0 left-0 p-6 md:p-10 w-full z-10">
                         <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-action-orange text-white text-[10px] font-black uppercase tracking-widest mb-4 shadow-lg shadow-orange-600/35">
                           <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
@@ -288,8 +321,8 @@ export default function CustomerHome() {
                         <h3 className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-3 uppercase leading-none drop-shadow-lg">
                           {c.name}
                         </h3>
-                        <p className="font-body-md text-sm md:text-base text-slate-100 hidden md:block font-light max-w-lg leading-relaxed opacity-95 drop-shadow">
-                          Curated from the finest verified local artisans and top-tier Nigerian vendors. Guaranteed quality backed by our platform escrow security.
+                        <p className="font-sans text-xl md:text-3xl font-black text-white tracking-wide uppercase drop-shadow-md">
+                          Mens Fashion
                         </p>
                       </div>
                     </Link>
@@ -300,12 +333,13 @@ export default function CustomerHome() {
               if (isWide) {
                 return (
                   <motion.div key={c.id} variants={itemVariants} className="col-span-2 md:col-span-2">
-                    <Link to={`/customer/categories?id=${c.id}`} className="block relative h-32 md:h-[200px] rounded-2xl overflow-hidden ambient-shadow group card-hover bg-surface-container-low flex items-center justify-between p-6 md:p-8">
-                      <div className="z-10">
-                        <h3 className="font-headline-md text-headline-md text-on-surface mb-2">{c.name}</h3>
-                        <p className="font-label-md text-label-md text-action-orange flex items-center gap-1 font-bold">Shop Gear <span className="material-symbols-outlined text-sm">chevron_right</span></p>
+                    <Link to={`/customer/categories?id=${c.id}`} className="block relative h-32 md:h-[200px] rounded-2xl overflow-hidden ambient-shadow group card-hover bg-surface-white">
+                      <img className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src={getCategoryImage(c.name, i)} alt={c.name} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-transparent"></div>
+                      <div className="absolute bottom-0 left-0 p-6 z-10 w-full">
+                        <h3 className="text-xl md:text-2xl font-bold text-white mb-1 uppercase tracking-tight">{c.name}</h3>
+                        <p className="font-label-sm text-xs text-action-orange flex items-center gap-1 font-bold">Shop Selection <span className="material-symbols-outlined text-[14px]">chevron_right</span></p>
                       </div>
-                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-action-orange/10 via-transparent to-transparent"></div>
                     </Link>
                   </motion.div>
                 );
@@ -314,9 +348,11 @@ export default function CustomerHome() {
               return (
                 <motion.div key={c.id} variants={itemVariants}>
                   <Link to={`/customer/categories?id=${c.id}`} className="block relative h-32 md:h-[200px] rounded-2xl overflow-hidden ambient-shadow group card-hover bg-surface-white">
-                    <div className="absolute inset-0 bg-gradient-to-tr from-surface-variant to-surface-container-low transition-transform duration-700 group-hover:scale-105"></div>
-                    <div className="absolute bottom-0 left-0 p-4 z-10 w-full bg-gradient-to-t from-black/60 to-transparent h-full flex items-end">
-                      <h3 className="font-title-lg text-title-lg text-white font-bold">{c.name}</h3>
+                    <img className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src={getCategoryImage(c.name, i)} alt={c.name} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-transparent"></div>
+                    <div className="absolute bottom-0 left-0 p-4 z-10 w-full">
+                      <h3 className="font-title-lg text-title-lg text-white font-bold mb-1">{c.name}</h3>
+                      <p className="text-[11px] text-action-orange font-bold uppercase tracking-wider flex items-center gap-0.5">Explore <span className="material-symbols-outlined text-[12px]">chevron_right</span></p>
                     </div>
                   </Link>
                 </motion.div>
@@ -389,13 +425,14 @@ export default function CustomerHome() {
         ) : (
           <motion.div 
             initial="hidden"
-            animate="show"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.1 }}
             variants={{
               hidden: { opacity: 0 },
               show: {
                 opacity: 1,
                 transition: {
-                  staggerChildren: 0.12
+                  staggerChildren: 0.15
                 }
               }
             }}
@@ -426,7 +463,7 @@ export default function CustomerHome() {
                   </div>
                   <div className="mt-auto flex items-end justify-between">
                     <div>
-                      <span className="font-headline-md text-headline-md text-success-emerald block">₦{p.priceCents.toLocaleString()}</span>
+                      <span className="font-headline-md text-headline-md text-success-emerald block">₦{(p.priceCents / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
                     <button className="bg-surface-container-low text-on-surface hover:bg-action-orange hover:text-white p-2 rounded-full transition-colors duration-200">
                       <span className="material-symbols-outlined">add</span>

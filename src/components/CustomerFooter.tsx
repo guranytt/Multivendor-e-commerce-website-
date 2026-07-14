@@ -1,78 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 
 export default function CustomerFooter() {
-  const [email, setEmail] = useState('');
-  const [isSubscribed, setIsSubscribed] = useState(false);
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email.trim()) {
-      setIsSubscribed(true);
-      setEmail('');
-      setTimeout(() => setIsSubscribed(false), 5000); // resets after 5 seconds
-    }
-  };
-
   return (
     <footer className="w-full bg-slate-900 text-slate-300 border-t border-slate-800 mt-auto pb-24 md:pb-0 font-body-md text-body-md">
-      {/* Upper Newsletter Bar */}
+      {/* Upper Escrow Trust Bar */}
       <div className="border-b border-slate-800 bg-slate-950/40">
-        <div className="max-w-max-width mx-auto px-margin-desktop py-10 flex flex-col lg:flex-row items-center justify-between gap-6">
-          <div className="space-y-1.5 text-center lg:text-left">
-            <h4 className="font-title-lg text-title-lg text-white font-extrabold tracking-tight flex items-center justify-center lg:justify-start gap-2">
-              <span className="material-symbols-outlined text-action-orange animate-bounce">campaign</span>
-              Stay Updated on Premium Naija Deals
-            </h4>
-            <p className="text-slate-400 text-sm max-w-lg leading-relaxed">
-              Subscribe to get immediate alerts on seasonal price drops, featured Nigerian product launches, and exclusive verified merchant discount codes.
+        <div className="max-w-max-width mx-auto px-margin-desktop py-6">
+          {/* Escrow Informative block */}
+          <div className="flex flex-col md:flex-row md:items-center gap-4 text-left text-xs bg-slate-900/90 border border-slate-800 p-4 rounded-xl text-slate-300">
+            <div className="flex items-center gap-2.5 shrink-0">
+              <span className="material-symbols-outlined text-emerald-400 text-[24px]">verified_user</span>
+              <p className="font-bold text-white text-sm flex items-center gap-1.5">
+                Secure Escrow Guarantee
+                <span className="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 rounded font-mono font-bold uppercase tracking-wider">Active</span>
+              </p>
+            </div>
+            <p className="text-slate-400 leading-relaxed text-xs md:border-l md:border-slate-800 md:pl-4 flex-1">
+              All customer payments are held in our secure escrow accounts and only disbursed to vendors <span className="text-action-orange font-semibold">after you confirm</span> complete satisfaction with your delivery, protecting both buyers and local businesses against fraud.
             </p>
-          </div>
-          
-          <div className="w-full lg:w-auto min-w-[320px] md:min-w-[440px] relative">
-            <AnimatePresence mode="wait">
-              {!isSubscribed ? (
-                <motion.form 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  onSubmit={handleSubscribe} 
-                  className="flex gap-2"
-                >
-                  <div className="relative flex-grow">
-                    <span className="material-symbols-outlined text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 text-[18px]">mail</span>
-                    <input
-                      type="email"
-                      required
-                      placeholder="Enter your professional email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-slate-800 border border-slate-700 rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-action-orange transition-colors"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="bg-action-orange hover:bg-orange-600 active:scale-95 text-white font-black text-xs uppercase tracking-wider px-6 py-3 rounded-xl transition-all shrink-0 shadow-lg shadow-orange-600/20"
-                  >
-                    Subscribe
-                  </button>
-                </motion.form>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  className="flex items-center gap-3 bg-emerald-950/50 border border-emerald-500/30 rounded-xl px-4 py-3 text-emerald-300 text-sm"
-                >
-                  <span className="material-symbols-outlined text-emerald-400">check_circle</span>
-                  <div>
-                    <p className="font-bold">Ẹ ku oriire! (Congratulations)</p>
-                    <p className="text-xs text-emerald-400/80">You're now on our premium priority updates list.</p>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
         </div>
       </div>
@@ -81,38 +28,47 @@ export default function CustomerFooter() {
       <div className="max-w-max-width mx-auto px-margin-desktop py-14 flex flex-col gap-10">
         
         {/* Top Info section: Brand Info, Escrow, and Socials side-by-side */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 pb-8 border-b border-slate-800">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-slate-800">
           <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 flex-grow w-full">
-            <span className="font-headline-md text-headline-md font-black text-action-orange tracking-tight block shrink-0">
-              Naija Online Stores
+            <span className="font-headline-sm text-headline-sm font-black tracking-tight flex items-center gap-2.5 shrink-0">
+              <img 
+                src="https://res.cloudinary.com/dqpjjfsya/image/upload/v1780680415/IMG_20260605_180310_438_ztopwj.png" 
+                alt="Naija Online Stores Logo" 
+                className="h-7 w-7 object-contain rounded-md border-2 border-action-orange p-0.5"
+                referrerPolicy="no-referrer"
+              />
+              <span>
+                <span className="text-success-emerald">Naija</span>{' '}
+                <span className="text-action-orange">Online Stores</span>
+              </span>
             </span>
-            <p className="text-slate-400 text-sm leading-relaxed md:border-l md:border-slate-800 md:pl-6">
+            <p className="text-slate-400 text-xs leading-relaxed md:border-l md:border-slate-800 md:pl-6 max-w-2xl">
               Nigeria's premier secure multi-vendor digital marketplace. We connect approved local fashion houses, visual arts, crafts, and high-quality sellers with buyers globally under a strictly managed safe escrow platform.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+          <div className="flex flex-row items-center gap-4 shrink-0">
             {/* Escrow Badge */}
-            <div className="inline-flex items-center gap-3.5 bg-slate-950 px-4 py-3 rounded-xl border border-slate-800 shadow-inner max-w-sm">
-              <div className="w-10 h-10 rounded-lg bg-emerald-950/60 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
-                <span className="material-symbols-outlined text-[20px]">shield</span>
+            <div className="inline-flex items-center gap-2 bg-slate-950 px-2.5 py-1.5 rounded-lg border border-slate-800 shadow-inner">
+              <div className="w-7 h-7 rounded-md bg-emerald-950/60 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+                <span className="material-symbols-outlined text-[15px]">shield</span>
               </div>
               <div className="text-left">
-                <span className="block text-xs font-black text-white uppercase tracking-wider">Escrow Secure Checkouts</span>
-                <span className="block text-[11px] text-slate-500">Platform-mediated local payments via Paystack</span>
+                <span className="block text-[10px] font-black text-white uppercase tracking-wider leading-none">Escrow Secure</span>
+                <span className="block text-[9px] text-slate-500 mt-0.5 leading-none">via Paystack</span>
               </div>
             </div>
             
             {/* Social Icons */}
-            <div className="flex gap-2.5">
-              <a href="#" className="w-10 h-10 rounded-xl bg-slate-800 hover:bg-action-orange hover:text-white flex items-center justify-center text-slate-400 transition-all hover:-translate-y-1" aria-label="Instagram">
-                <span className="material-symbols-outlined text-[18px]">photo_camera</span>
+            <div className="flex gap-1.5">
+              <a href="#" className="w-7 h-7 rounded-lg bg-slate-800 hover:bg-action-orange hover:text-white flex items-center justify-center text-slate-400 transition-all hover:-translate-y-0.5" aria-label="Instagram">
+                <span className="material-symbols-outlined text-[13px]">photo_camera</span>
               </a>
-              <a href="#" className="w-10 h-10 rounded-xl bg-slate-800 hover:bg-action-orange hover:text-white flex items-center justify-center text-slate-400 transition-all hover:-translate-y-1" aria-label="Twitter / X">
-                <span className="material-symbols-outlined text-[18px]">alternate_email</span>
+              <a href="#" className="w-7 h-7 rounded-lg bg-slate-800 hover:bg-action-orange hover:text-white flex items-center justify-center text-slate-400 transition-all hover:-translate-y-0.5" aria-label="Twitter / X">
+                <span className="material-symbols-outlined text-[13px]">alternate_email</span>
               </a>
-              <a href="#" className="w-10 h-10 rounded-xl bg-slate-800 hover:bg-action-orange hover:text-white flex items-center justify-center text-slate-400 transition-all hover:-translate-y-1" aria-label="Facebook">
-                <span className="material-symbols-outlined text-[18px]">group</span>
+              <a href="#" className="w-7 h-7 rounded-lg bg-slate-800 hover:bg-action-orange hover:text-white flex items-center justify-center text-slate-400 transition-all hover:-translate-y-0.5" aria-label="Facebook">
+                <span className="material-symbols-outlined text-[13px]">group</span>
               </a>
             </div>
           </div>

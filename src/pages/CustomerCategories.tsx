@@ -1,6 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useAuth as useClerkAuth } from '@clerk/clerk-react';
+import { motion } from 'motion/react';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 40 },
+  show: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { 
+      type: 'spring', 
+      stiffness: 70, 
+      damping: 18,
+      mass: 1.1
+    } 
+  }
+};
 
 export default function CustomerCategories() {
   const [categories, setCategories] = useState<any[]>([]);
@@ -131,27 +156,39 @@ export default function CustomerCategories() {
           {loading ? (
             <div className="flex justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-action-orange"></div></div>
           ) : filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-gutter">
+            <motion.div 
+              initial="hidden"
+              animate="show"
+              variants={containerVariants}
+              className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-gutter"
+            >
               {filteredProducts.map(p => (
-                <Link key={p.id} to={`/customer/product/${p.id}`} className="bg-surface-white rounded-xl p-md shadow-[0px_20px_25px_rgba(10,10,10,0.05)] hover:-translate-y-1 hover:shadow-[0px_25px_30px_rgba(10,10,10,0.08)] transition-all duration-300 flex flex-col group cursor-pointer border border-transparent hover:border-surface-variant">
-                  <div className="relative w-full aspect-square mb-md overflow-hidden rounded-lg bg-surface-container-low">
-                    {p.images && p.images.length > 0 ? (
-                      <img src={p.images[0].url} alt={p.title} className="object-cover w-full h-full mix-blend-multiply group-hover:scale-105 transition-transform duration-500" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-surface-variant">
-                        <span className="material-symbols-outlined text-4xl">image</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1 flex flex-col">
-                    <h3 className="font-title-lg text-title-lg text-on-surface mb-xs line-clamp-2">{p.title}</h3>
-                    <div className="mt-auto flex items-end justify-between">
-                      <span className="font-headline-md text-headline-md text-success-emerald block">${(p.priceCents / 100).toFixed(2)}</span>
+                <motion.div
+                  key={p.id}
+                  variants={itemVariants}
+                  whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.2, ease: 'easeOut' } }}
+                  className="h-full"
+                >
+                  <Link to={`/customer/product/${p.id}`} className="bg-surface-white rounded-xl p-md shadow-[0px_20px_25px_rgba(10,10,10,0.05)] transition-all duration-300 flex flex-col group cursor-pointer border border-transparent hover:border-surface-variant h-full">
+                    <div className="relative w-full aspect-square mb-md overflow-hidden rounded-lg bg-surface-container-low">
+                      {p.images && p.images.length > 0 ? (
+                        <img src={p.images[0].url} alt={p.title} className="object-cover w-full h-full mix-blend-multiply group-hover:scale-105 transition-transform duration-500" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-surface-variant">
+                          <span className="material-symbols-outlined text-4xl">image</span>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                </Link>
+                    <div className="flex-1 flex flex-col">
+                      <h3 className="font-title-lg text-title-lg text-on-surface mb-xs line-clamp-2">{p.title}</h3>
+                      <div className="mt-auto flex items-end justify-between">
+                        <span className="font-headline-md text-headline-md text-success-emerald block">₦{(p.priceCents / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           ) : (
              <div className="text-center py-12 text-on-surface-variant font-body-md">
                No products found.
