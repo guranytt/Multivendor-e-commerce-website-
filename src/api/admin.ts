@@ -83,26 +83,6 @@ router.post('/payouts/:vendorId/pay', requireAuth, requireAdmin, async (req: any
         )
       ).returning();
 
-    // Fetch vendor email for notification
-    const vendorRecord = await db.select().from(vendors).where(eq(vendors.id, parseInt(vendorId)));
-    if (vendorRecord.length > 0) {
-      const vendorUser = await db.select().from(users).where(eq(users.id, vendorRecord[0].userId));
-      if (vendorUser.length > 0 && process.env.RESEND_API_KEY) {
-        try {
-          await resend.emails.send({
-            from: 'Marketplace Admin <admin@yourdomain.com>',
-            to: vendorUser[0].email,
-            subject: 'Payout Processed',
-            html: `<p>Your payout has been processed. Note: ${note || 'None'}</p>`
-          });
-        } catch (e) {
-          console.error('Failed to send Resend email:', e);
-        }
-      } else {
-        console.log(`[Email Mock] Sent payout notification to vendor ${vendorId}`);
-      }
-    }
-
     res.json({ success: true, updatedCount: updated.length });
   } catch (error) {
     res.status(500).json({ error: 'Failed to process payout' });

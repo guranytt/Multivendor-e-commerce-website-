@@ -5,6 +5,7 @@ import AdminVendors from '../components/AdminVendors';
 import AdminPayouts from '../components/AdminPayouts';
 import VendorProducts from '../components/VendorProducts';
 import VendorOrders from '../components/VendorOrders';
+import VendorSettings from '../components/VendorSettings';
 import Storefront from '../components/Storefront';
 import CustomerOrders from '../components/CustomerOrders';
 import { Link } from 'react-router-dom';

@@ -5,6 +5,7 @@ import rateLimit from 'express-rate-limit';
 
 async function startServer() {
   const app = express();
+  app.set('trust proxy', 1);
   const PORT = 3000;
 
   app.use(express.json({
@@ -50,6 +51,9 @@ async function startServer() {
 
   const ordersRouter = (await import('./src/api/orders.ts')).default;
   app.use('/api/orders', ordersRouter);
+  const webhooksRouter = (await import('./src/api/webhooks.ts')).default;
+  app.use('/api/webhooks', webhooksRouter);
+
 
   app.post('/api/users/sync', authLimiter, async (req, res) => {
     // Basic sync: receive token, check user, insert to DB

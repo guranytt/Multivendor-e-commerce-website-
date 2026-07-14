@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import { useAuth } from './AuthProvider';
 
 export default function CustomerOrders() {
   const { user } = useAuth();
+  const { getToken } = useClerkAuth();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -14,8 +15,7 @@ export default function CustomerOrders() {
   }, [user]);
 
   const fetchOrders = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token;
+    const token = await getToken();
     try {
       const res = await fetch('/api/orders/me', {
         headers: { 'Authorization': `Bearer ${token}` }
