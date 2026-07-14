@@ -1,5 +1,5 @@
+import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
 
 type Category = {
   id: number;
@@ -9,6 +9,7 @@ type Category = {
 };
 
 export default function AdminCategories() {
+  const { getToken } = useClerkAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [name, setName] = useState('');
   const [slug, setSlug] = useState('');
@@ -36,8 +37,7 @@ export default function AdminCategories() {
     e.preventDefault();
     setLoading(true);
 
-    const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token;
+    const token = await getToken();
 
     const payload = {
       name,
@@ -84,8 +84,7 @@ export default function AdminCategories() {
   const handleDelete = async (id: number) => {
     if (!confirm('Are you sure?')) return;
     
-    const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token;
+    const token = await getToken();
 
     try {
       const res = await fetch(`/api/categories/${id}`, {

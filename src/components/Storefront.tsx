@@ -1,8 +1,9 @@
+import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
 import { useAuth } from './AuthProvider';
 
 export default function Storefront() {
+  const { getToken } = useClerkAuth();
   const { user } = useAuth();
   const [products, setProducts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
@@ -47,8 +48,7 @@ export default function Storefront() {
   };
 
   const fetchCart = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token;
+    const token = await getToken();
     try {
       const res = await fetch('/api/cart', {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -64,8 +64,7 @@ export default function Storefront() {
       alert("Please login to add to cart");
       return;
     }
-    const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token;
+    const token = await getToken();
     try {
       const res = await fetch('/api/cart/items', {
         method: 'POST',
@@ -84,8 +83,7 @@ export default function Storefront() {
   };
 
   const updateCartItem = async (itemId: number, quantity: number) => {
-    const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token;
+    const token = await getToken();
     try {
       await fetch(`/api/cart/items/${itemId}`, {
         method: 'PUT',
@@ -102,8 +100,7 @@ export default function Storefront() {
   };
 
   const handleCheckout = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token;
+    const token = await getToken();
     try {
       const res = await fetch('/api/checkout/simulate-payment', {
         method: 'POST',
@@ -179,6 +176,11 @@ export default function Storefront() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProducts.map(p => (
             <div key={p.id} className="bg-white rounded-lg shadow border p-4 flex flex-col">
+              {p.images && p.images.length > 0 && (
+                <div className="mb-4 -mx-4 -mt-4">
+                  <img src={p.images[0].url} alt={p.title} className="w-full h-48 object-cover rounded-t-lg" />
+                </div>
+              )}
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-gray-900">{p.title}</h3>
                 <p className="text-gray-500 text-sm mt-1">{p.description}</p>

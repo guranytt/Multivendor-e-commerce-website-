@@ -1,5 +1,5 @@
+import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
 
 type Vendor = {
   id: number;
@@ -11,11 +11,11 @@ type Vendor = {
 };
 
 export default function AdminVendors() {
+  const { getToken } = useClerkAuth();
   const [vendors, setVendors] = useState<Vendor[]>([]);
 
   const fetchVendors = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token;
+    const token = await getToken();
 
     try {
       const res = await fetch('/api/vendors', {
@@ -34,8 +34,7 @@ export default function AdminVendors() {
   }, []);
 
   const handleApprove = async (id: number) => {
-    const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token;
+    const token = await getToken();
 
     try {
       const res = await fetch(`/api/vendors/${id}/approve`, {

@@ -2,25 +2,27 @@ import { Router } from 'express';
 import { db } from '../db/db';
 import { vendors, users, vendorOrders, orders } from '../db/schema';
 import { eq, and } from 'drizzle-orm';
-import { createClient } from '@supabase/supabase-js';
+import { Resend } from 'resend';
 
 const router = Router();
+const resend = new Resend(process.env.RESEND_API_KEY || 're_mock_key');
 
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL || '',
-  process.env.VITE_SUPABASE_ANON_KEY || ''
-);
 
 const requireAuth = async (req: any, res: any, next: any) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Unauthorized' });
 
-  const { data: { user }, error } = await supabase.auth.getUser(token);
-  
-  if (error || !user) return res.status(401).json({ error: 'Unauthorized' });
-  
-  req.user = user;
-  next();
+  try {
+    const { verifyToken } = await import('@clerk/backend');
+    const verifiedSession = await verifyToken(token, {
+      secretKey: process.env.CLERK_SECRET_KEY,
+    });
+    
+    req.user = { id: verifiedSession.sub };
+    next();
+  } catch (error) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
 };
 
 const requireAdmin = async (req: any, res: any, next: any) => {
@@ -164,7 +166,25 @@ router.put('/orders/:id/status', requireAuth, requireVendor, async (req: any, re
       return res.status(404).json({ error: 'Order not found or access denied' });
     }
     
-    console.log(`[Email Mock] Sent customer update email for order ${id} new status: ${status}`);
+    // Fetch customer email to notify them
+    const parentOrder = await db.select().from(orders).where(eq(orders.id, updated[0].orderId));
+    if (parentOrder.length > 0) {
+      const customerUser = await db.select().from(users).where(eq(users.id, parentOrder[0].customerId));
+      if (customerUser.length > 0 && process.env.RESEND_API_KEY) {
+        try {
+          await resend.emails.send({
+            from: 'Marketplace <updates@yourdomain.com>',
+            to: customerUser[0].email,
+            subject: `Order Update: ${status}`,
+            html: `<p>Your order status from vendor has been updated to: <b>${status}</b>.</p>`
+          });
+        } catch (e) {
+          console.error('Failed to send Resend email:', e);
+        }
+      } else {
+        console.log(`[Email Mock] Sent customer update email for order ${id} new status: ${status}`);
+      }
+    }
     
     res.json(updated[0]);
   } catch (error) {

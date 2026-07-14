@@ -2,22 +2,25 @@ import { Router } from 'express';
 import { db } from '../db/db';
 import { carts, cartItems, products, vendors } from '../db/schema';
 import { eq, and } from 'drizzle-orm';
-import { createClient } from '@supabase/supabase-js';
 
 const router = Router();
 
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL || '',
-  process.env.VITE_SUPABASE_ANON_KEY || ''
-);
 
 const requireAuth = async (req: any, res: any, next: any) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Unauthorized' });
-  const { data: { user }, error } = await supabase.auth.getUser(token);
-  if (error || !user) return res.status(401).json({ error: 'Unauthorized' });
-  req.user = user;
-  next();
+
+  try {
+    const { verifyToken } = await import('@clerk/backend');
+    const verifiedSession = await verifyToken(token, {
+      secretKey: process.env.CLERK_SECRET_KEY,
+    });
+    
+    req.user = { id: verifiedSession.sub };
+    next();
+  } catch (error) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
 };
 
 // Get current user's cart

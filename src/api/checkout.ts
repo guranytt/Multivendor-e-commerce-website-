@@ -2,23 +2,26 @@ import { Router } from 'express';
 import { db } from '../db/db';
 import { carts, cartItems, products, vendors, orders, vendorOrders, vendorOrderItems } from '../db/schema';
 import { eq, inArray } from 'drizzle-orm';
-import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 
 const router = Router();
 
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL || '',
-  process.env.VITE_SUPABASE_ANON_KEY || ''
-);
 
 const requireAuth = async (req: any, res: any, next: any) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Unauthorized' });
-  const { data: { user }, error } = await supabase.auth.getUser(token);
-  if (error || !user) return res.status(401).json({ error: 'Unauthorized' });
-  req.user = user;
-  next();
+
+  try {
+    const { verifyToken } = await import('@clerk/backend');
+    const verifiedSession = await verifyToken(token, {
+      secretKey: process.env.CLERK_SECRET_KEY,
+    });
+    
+    req.user = { id: verifiedSession.sub };
+    next();
+  } catch (error) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
 };
 
 const PLATFORM_COMMISSION_PERCENT = 10; // 10% platform fee
@@ -58,11 +61,11 @@ router.post('/initialize', requireAuth, async (req: any, res: any) => {
 });
 
 // Paystack Webhook
-router.post('/webhook', async (req, res) => {
+router.post('/webhook', async (req: any, res: any) => {
   try {
     const secret = process.env.PAYSTACK_SECRET_KEY || 'mock_secret';
-    // Validate signature
-    const hash = crypto.createHmac('sha512', secret).update(JSON.stringify(req.body)).digest('hex');
+    // Validate signature using raw body to ensure exact match with what Paystack sent
+    const hash = crypto.createHmac('sha512', secret).update(req.rawBody || JSON.stringify(req.body)).digest('hex');
     if (hash !== req.headers['x-paystack-signature']) {
       // In production, reject if mismatch. Since this is MVP without real Paystack, we'll allow it if testing mode
       if (process.env.NODE_ENV === 'production') {

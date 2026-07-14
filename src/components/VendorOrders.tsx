@@ -1,7 +1,8 @@
+import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
 
 export default function VendorOrders() {
+  const { getToken } = useClerkAuth();
   const [orders, setOrders] = useState<any[]>([]);
   const [vendorStatus, setVendorStatus] = useState<string | null>(null);
 
@@ -10,8 +11,7 @@ export default function VendorOrders() {
   }, []);
 
   const fetchVendorStatus = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token;
+    const token = await getToken();
     try {
       const res = await fetch('/api/vendors/me', {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -40,8 +40,7 @@ export default function VendorOrders() {
   };
 
   const updateStatus = async (id: number, status: string) => {
-    const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token;
+    const token = await getToken();
     try {
       const res = await fetch(`/api/vendors/orders/${id}/status`, {
         method: 'PUT',

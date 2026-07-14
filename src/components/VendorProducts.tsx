@@ -1,11 +1,17 @@
+import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+
+type Image = {
+  url: string;
+  publicId: string;
+};
 
 type Product = {
   id: number;
   title: string;
   priceCents: number;
   inventoryCount: number;
+  images: Image[];
 };
 
 type Category = {
@@ -14,6 +20,7 @@ type Category = {
 };
 
 export default function VendorProducts() {
+  const { getToken } = useClerkAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [title, setTitle] = useState('');
@@ -25,6 +32,8 @@ export default function VendorProducts() {
   const [editingId, setEditingId] = useState<number | null>(null);
   
   const [vendorStatus, setVendorStatus] = useState<string | null>(null);
+  const [images, setImages] = useState<Image[]>([]);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
     fetchVendorStatus();
@@ -32,8 +41,7 @@ export default function VendorProducts() {
   }, []);
 
   const fetchVendorStatus = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token;
+    const token = await getToken();
     try {
       const res = await fetch('/api/vendors/me', {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -74,8 +82,7 @@ export default function VendorProducts() {
     e.preventDefault();
     setLoading(true);
 
-    const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token;
+    const token = await getToken();
 
     const payload = {
       title,
@@ -83,6 +90,7 @@ export default function VendorProducts() {
       priceCents: parseInt(priceCents),
       inventoryCount: parseInt(inventoryCount),
       categoryId: parseInt(categoryId),
+      images,
     };
 
     try {
@@ -103,6 +111,7 @@ export default function VendorProducts() {
         setPriceCents('');
         setInventoryCount('');
         setCategoryId('');
+        setImages([]);
         setEditingId(null);
         fetchProducts(token!);
       } else {
@@ -122,6 +131,37 @@ export default function VendorProducts() {
     setPriceCents(p.priceCents.toString());
     setInventoryCount(p.inventoryCount.toString());
     setCategoryId(p.categoryId.toString());
+    setImages(p.images || []);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    setUploadingImage(true);
+    try {
+      const token = await getToken();
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const res = await fetch('/api/products/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData,
+      });
+      const data = await res.json();
+      if (res.ok && data.url) {
+        setImages([...images, data]);
+      } else {
+        alert(data.error || "Failed to upload image");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to upload image");
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   if (vendorStatus === 'pending') {
@@ -158,6 +198,21 @@ export default function VendorProducts() {
         <div>
           <label className="block text-sm font-medium text-gray-700">Inventory Count</label>
           <input type="number" required min="0" value={inventoryCount} onChange={(e) => setInventoryCount(e.target.value)} className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+        </div>
+        <div className="sm:col-span-2 lg:col-span-3">
+          <label className="block text-sm font-medium text-gray-700">Images</label>
+          <div className="flex gap-2 mt-2 overflow-x-auto">
+            {images.map((img, idx) => (
+              <div key={idx} className="relative group">
+                <img src={img.url} alt="Product upload" className="h-20 w-20 object-cover rounded-md border" />
+              </div>
+            ))}
+            <label className="h-20 w-20 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50">
+              <span className="text-gray-500 text-2xl">+</span>
+              <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploadingImage} />
+            </label>
+          </div>
+          {uploadingImage && <p className="text-sm text-gray-500 mt-1">Uploading...</p>}
         </div>
         <div className="sm:col-span-2 lg:col-span-3">
           <label className="block text-sm font-medium text-gray-700">Description</label>

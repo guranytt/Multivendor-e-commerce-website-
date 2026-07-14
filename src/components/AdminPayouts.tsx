@@ -1,13 +1,13 @@
+import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
 
 export default function AdminPayouts() {
+  const { getToken } = useClerkAuth();
   const [payoutGroups, setPayoutGroups] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
   const fetchPayouts = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token;
+    const token = await getToken();
     try {
       const res = await fetch('/api/admin/payouts', {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -27,8 +27,7 @@ export default function AdminPayouts() {
     if (note === null) return; // cancelled
 
     setLoading(true);
-    const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token;
+    const token = await getToken();
     
     try {
       const res = await fetch(`/api/admin/payouts/${vendorId}/pay`, {

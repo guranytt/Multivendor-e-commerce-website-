@@ -1,8 +1,9 @@
+import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import React, { useState } from 'react';
-import { supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 
 export default function VendorOnboarding() {
+  const { getToken } = useClerkAuth();
   const [shopName, setShopName] = useState('');
   const [description, setDescription] = useState('');
   const [bankName, setBankName] = useState('');
@@ -15,8 +16,7 @@ export default function VendorOnboarding() {
     e.preventDefault();
     setLoading(true);
 
-    const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token;
+    const token = await getToken();
 
     try {
       const res = await fetch('/api/vendors/onboard', {

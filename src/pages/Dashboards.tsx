@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useAuth } from '../components/AuthProvider';
-import { supabase } from '../lib/supabase';
 import AdminCategories from '../components/AdminCategories';
 import AdminVendors from '../components/AdminVendors';
 import AdminPayouts from '../components/AdminPayouts';
@@ -9,14 +8,14 @@ import VendorOrders from '../components/VendorOrders';
 import Storefront from '../components/Storefront';
 import CustomerOrders from '../components/CustomerOrders';
 import { Link } from 'react-router-dom';
+import { SignOutButton } from '@clerk/clerk-react';
 
 const LogoutButton = () => (
-  <button 
-    onClick={() => supabase.auth.signOut()}
-    className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
-  >
-    Log out
-  </button>
+  <SignOutButton>
+    <button className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300">
+      Log out
+    </button>
+  </SignOutButton>
 );
 
 export function AdminDashboard() {

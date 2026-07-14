@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'r
 import { AuthProvider, useAuth } from './components/AuthProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import { AdminDashboard, VendorDashboard, CustomerDashboard } from './pages/Dashboards';
 import VendorOnboarding from './pages/VendorOnboarding';
 
@@ -27,7 +28,8 @@ export default function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/login/*" element={<Login />} />
+          <Route path="/sign-up/*" element={<Register />} />
           
           <Route 
             path="/admin/*" 

@@ -2,22 +2,36 @@ import { Router } from 'express';
 import { db } from '../db/db';
 import { products, vendors } from '../db/schema';
 import { eq, and, ilike, or } from 'drizzle-orm';
-import { createClient } from '@supabase/supabase-js';
+import multer from 'multer';
+import { v2 as cloudinary } from 'cloudinary';
+import fs from 'fs';
 
 const router = Router();
 
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL || '',
-  process.env.VITE_SUPABASE_ANON_KEY || ''
-);
+cloudinary.config({
+  cloud_name: process.env.VITE_CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+const upload = multer({ dest: '/tmp/uploads/' });
+
 
 const requireAuth = async (req: any, res: any, next: any) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Unauthorized' });
-  const { data: { user }, error } = await supabase.auth.getUser(token);
-  if (error || !user) return res.status(401).json({ error: 'Unauthorized' });
-  req.user = user;
-  next();
+
+  try {
+    const { verifyToken } = await import('@clerk/backend');
+    const verifiedSession = await verifyToken(token, {
+      secretKey: process.env.CLERK_SECRET_KEY,
+    });
+    
+    req.user = { id: verifiedSession.sub };
+    next();
+  } catch (error) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
 };
 
 const requireVendor = async (req: any, res: any, next: any) => {
@@ -29,17 +43,40 @@ const requireVendor = async (req: any, res: any, next: any) => {
   next();
 };
 
+// Vendor upload product image
+router.post('/upload', requireAuth, requireVendor, upload.single('file'), async (req: any, res: any) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'marketplace/products',
+    });
+    // clean up local file
+    fs.promises.unlink(req.file.path).catch(console.error);
+    
+    res.json({
+      url: result.secure_url,
+      publicId: result.public_id
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to upload image' });
+  }
+});
+
 // Vendor creates product
 router.post('/', requireAuth, requireVendor, async (req: any, res: any) => {
   try {
-    const { title, description, categoryId, priceCents, inventoryCount } = req.body;
+    const { title, description, categoryId, priceCents, inventoryCount, images } = req.body;
     const newProduct = await db.insert(products).values({
       vendorId: req.vendor.id,
       title,
       description,
       categoryId,
       priceCents,
-      inventoryCount
+      inventoryCount,
+      images: images || []
     }).returning();
     res.status(201).json(newProduct[0]);
   } catch (error) {
@@ -61,9 +98,9 @@ router.get('/me', requireAuth, requireVendor, async (req: any, res: any) => {
 router.put('/:id', requireAuth, requireVendor, async (req: any, res: any) => {
   try {
     const { id } = req.params;
-    const { title, description, categoryId, priceCents, inventoryCount } = req.body;
+    const { title, description, categoryId, priceCents, inventoryCount, images } = req.body;
     const updated = await db.update(products)
-      .set({ title, description, categoryId, priceCents, inventoryCount })
+      .set({ title, description, categoryId, priceCents, inventoryCount, images: images || [] })
       .where(and(eq(products.id, parseInt(id)), eq(products.vendorId, req.vendor.id)))
       .returning();
     

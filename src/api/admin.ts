@@ -2,22 +2,27 @@ import { Router } from 'express';
 import { db } from '../db/db';
 import { vendors, vendorOrders, users } from '../db/schema';
 import { eq, and, sql } from 'drizzle-orm';
-import { createClient } from '@supabase/supabase-js';
+import { Resend } from 'resend';
 
 const router = Router();
+const resend = new Resend(process.env.RESEND_API_KEY || 're_mock_key');
 
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL || '',
-  process.env.VITE_SUPABASE_ANON_KEY || ''
-);
 
 const requireAuth = async (req: any, res: any, next: any) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Unauthorized' });
-  const { data: { user }, error } = await supabase.auth.getUser(token);
-  if (error || !user) return res.status(401).json({ error: 'Unauthorized' });
-  req.user = user;
-  next();
+
+  try {
+    const { verifyToken } = await import('@clerk/backend');
+    const verifiedSession = await verifyToken(token, {
+      secretKey: process.env.CLERK_SECRET_KEY,
+    });
+    
+    req.user = { id: verifiedSession.sub };
+    next();
+  } catch (error) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
 };
 
 const requireAdmin = async (req: any, res: any, next: any) => {
@@ -78,9 +83,25 @@ router.post('/payouts/:vendorId/pay', requireAuth, requireAdmin, async (req: any
         )
       ).returning();
 
-    // In a real application, send Resend email to vendor here
-    // e.g. await resend.emails.send({...})
-    console.log(`[Email Mock] Sent payout notification to vendor ${vendorId}`);
+    // Fetch vendor email for notification
+    const vendorRecord = await db.select().from(vendors).where(eq(vendors.id, parseInt(vendorId)));
+    if (vendorRecord.length > 0) {
+      const vendorUser = await db.select().from(users).where(eq(users.id, vendorRecord[0].userId));
+      if (vendorUser.length > 0 && process.env.RESEND_API_KEY) {
+        try {
+          await resend.emails.send({
+            from: 'Marketplace Admin <admin@yourdomain.com>',
+            to: vendorUser[0].email,
+            subject: 'Payout Processed',
+            html: `<p>Your payout has been processed. Note: ${note || 'None'}</p>`
+          });
+        } catch (e) {
+          console.error('Failed to send Resend email:', e);
+        }
+      } else {
+        console.log(`[Email Mock] Sent payout notification to vendor ${vendorId}`);
+      }
+    }
 
     res.json({ success: true, updatedCount: updated.length });
   } catch (error) {
