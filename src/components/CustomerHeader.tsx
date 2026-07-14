@@ -19,12 +19,12 @@ export default function CustomerHeader({ cartCount }: { cartCount: number }) {
   };
   
   return (
-    <header className="sticky top-0 w-full z-50 bg-surface-white dark:bg-inverse-surface text-primary dark:text-primary-fixed-dim font-headline-md text-headline-md shadow-[0px_20px_25px_rgba(10,10,10,0.05)] shadow-sm dark:bg-surface-container-high transition-all duration-200 h-20">
+    <header className="sticky top-0 w-full z-50 bg-action-orange dark:bg-orange-600 text-white font-headline-md text-headline-md shadow-[0px_20px_25px_rgba(10,10,10,0.08)] transition-all duration-200 h-20">
       <div className="flex items-center justify-between px-margin-desktop max-w-max-width mx-auto h-full">
         {/* Mobile Menu Icon */}
         <button 
           onClick={() => setIsMenuOpen(true)}
-          className="md:hidden flex items-center justify-center p-2 text-on-surface hover:bg-surface-variant/5 rounded-full transition-colors"
+          className="md:hidden flex items-center justify-center p-2 text-white hover:bg-white/10 rounded-full transition-colors"
           aria-label="Open Menu"
         >
           <span className="material-symbols-outlined">menu</span>
@@ -35,12 +35,12 @@ export default function CustomerHeader({ cartCount }: { cartCount: number }) {
           <img 
             src="https://res.cloudinary.com/dqpjjfsya/image/upload/v1780680415/IMG_20260605_180310_438_ztopwj.png" 
             alt="Naija Online Stores Logo" 
-            className="h-10 w-10 object-contain rounded-md border-2 border-action-orange p-0.5"
+            className="h-10 w-10 object-contain rounded-md border-2 border-white p-0.5 bg-white"
             referrerPolicy="no-referrer"
           />
           <span className="hidden xs:inline">
-            <span className="text-success-emerald">Naija</span>{' '}
-            <span className="text-action-orange">Online Stores</span>
+            <span className="text-white">Naija</span>{' '}
+            <span className="text-white font-black">Online Stores</span>
           </span>
         </Link>
  
@@ -60,13 +60,13 @@ export default function CustomerHeader({ cartCount }: { cartCount: number }) {
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setIsSearchFocused(false)}
             placeholder="Search products, brands and categories..."
-            className="w-full bg-surface-container-low text-on-surface border border-surface-variant/70 hover:border-surface-variant rounded-xl py-2.5 pl-12 pr-10 focus:outline-none focus:ring-2 focus:ring-action-orange/30 focus:border-action-orange transition-all font-body-md text-body-md placeholder-on-surface-variant shadow-sm"
+            className="w-full bg-white/10 text-white border border-white/30 hover:border-white/50 rounded-xl py-2.5 pl-12 pr-10 focus:outline-none focus:ring-2 focus:ring-white/20 focus:bg-white focus:text-slate-900 focus:border-white transition-all font-body-md text-body-md placeholder-orange-100 focus:placeholder-slate-500 shadow-sm"
           />
-          <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-action-orange transition-colors">search</span>
+          <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-orange-100 group-focus-within:text-slate-600 transition-colors">search</span>
           {searchVal && (
             <button 
               onClick={() => setSearchVal('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-surface-variant/20 transition-all flex items-center justify-center"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-orange-100 group-focus-within:text-slate-600 hover:text-white group-focus-within:hover:text-slate-800 p-1 rounded-full hover:bg-white/10 group-focus-within:hover:bg-slate-100 transition-all flex items-center justify-center"
             >
               <span className="material-symbols-outlined text-[18px]">close</span>
             </button>
@@ -85,56 +85,56 @@ export default function CustomerHeader({ cartCount }: { cartCount: number }) {
             isSearchFocused ? 'pointer-events-none' : ''
           }`}
         >
-          <Link to="/customer" className="text-primary font-bold font-label-md text-label-md hover:bg-surface-variant/5 px-3 py-2 rounded-lg transition-all duration-200">Home</Link>
-          <Link to="/customer/categories" className="text-on-surface-variant font-label-md text-label-md hover:bg-surface-variant/5 px-3 py-2 rounded-lg transition-all duration-200">Categories</Link>
-          <Link to="/customer/orders" className="text-on-surface-variant font-label-md text-label-md hover:bg-surface-variant/5 px-3 py-2 rounded-lg transition-all duration-200">Orders</Link>
+          <Link to="/customer" className="text-white font-extrabold font-label-md text-label-md hover:bg-white/10 px-3 py-2 rounded-lg transition-all duration-200">Home</Link>
+          <Link to="/customer/categories" className="text-white font-extrabold font-label-md text-label-md hover:bg-white/10 px-3 py-2 rounded-lg transition-all duration-200">Categories</Link>
+          <Link to="/customer/orders" className="text-white font-extrabold font-label-md text-label-md hover:bg-white/10 px-3 py-2 rounded-lg transition-all duration-200">Orders</Link>
           
           {role === 'admin' && (
-            <Link to="/admin" className="text-action-orange font-bold font-label-md text-label-md hover:bg-action-orange/5 px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-1 border border-action-orange/20">
+            <Link to="/admin" className="text-white font-bold font-label-md text-label-md hover:bg-white/10 px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-1 border border-white/30">
               <span className="material-symbols-outlined text-[18px]">admin_panel_settings</span>
               Admin Console
             </Link>
           )}
 
-          <Link to="/customer/cart" className="relative p-2 text-on-surface-variant hover:bg-surface-variant/5 rounded-full transition-colors group">
-            <span className="material-symbols-outlined">shopping_cart</span>
+          <Link to="/customer/cart" className="relative text-white font-extrabold font-label-md text-label-md hover:bg-white/10 px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-1.5 group">
+            <span>Cart</span>
             {cartCount > 0 && (
-              <span className="absolute top-0 right-0 w-4 h-4 bg-action-orange text-white text-[10px] font-bold rounded-full flex items-center justify-center border border-white">
+              <span className="bg-white text-orange-600 text-[10px] font-black px-1.5 py-0.5 rounded-full flex items-center justify-center">
                 {cartCount}
               </span>
             )}
           </Link>
           {user ? (
             <SignOutButton>
-              <button className="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border-2 border-transparent hover:border-action-orange transition-all flex items-center justify-center">
+              <button className="w-10 h-10 rounded-full bg-white/20 overflow-hidden border-2 border-white/50 hover:border-white transition-all flex items-center justify-center text-white">
                 <span className="material-symbols-outlined">person</span>
               </button>
             </SignOutButton>
           ) : (
             <div className="flex items-center gap-2">
-              <Link to="/login" className="text-on-surface font-label-md text-label-md hover:bg-surface-variant/5 px-4 py-2 rounded-lg transition-all duration-200">
+              <Link to="/login" className="text-white font-extrabold font-label-md text-label-md hover:bg-white/10 px-4 py-2 rounded-lg transition-all duration-200">
                 Log In
               </Link>
-              <Link to="/sign-up" className="bg-action-orange text-white font-label-md text-label-md hover:bg-orange-600 px-4 py-2 rounded-lg transition-all duration-200 shadow-sm">
+              <Link to="/sign-up" className="bg-white text-orange-600 font-label-md text-label-md hover:bg-orange-50 px-4 py-2 rounded-lg transition-all duration-200 shadow-md font-bold">
                 Sign Up
               </Link>
             </div>
           )}
         </motion.nav>
-
+ 
         {/* Mobile Actions */}
         <div className="flex md:hidden items-center gap-3">
-          <button className="p-2 text-on-surface-variant hover:bg-surface-variant/5 rounded-full transition-colors">
+          <button className="p-2 text-white hover:bg-white/10 rounded-full transition-colors">
             <span className="material-symbols-outlined">search</span>
           </button>
           {user ? (
             <SignOutButton>
-              <button className="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-transparent flex items-center justify-center">
+              <button className="w-8 h-8 rounded-full bg-white/20 overflow-hidden border border-white/30 flex items-center justify-center text-white">
                 <span className="material-symbols-outlined">person</span>
               </button>
             </SignOutButton>
           ) : (
-            <Link to="/sign-up" className="bg-action-orange text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">
+            <Link to="/sign-up" className="bg-white text-orange-600 text-xs font-bold px-3 py-1.5 rounded-lg shadow-md hover:bg-orange-50 transition-colors">
               Sign Up
             </Link>
           )}
