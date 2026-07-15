@@ -9,6 +9,7 @@ const isLocal = connectionString.includes('localhost') || connectionString.inclu
 // Disable prefetch as it is not supported for "Transaction" pool mode
 const client = postgres(connectionString, { 
   prepare: false,
-  ssl: isLocal ? false : 'require'
+  ssl: isLocal ? false : 'require',
+  connect_timeout: 8, // Fail fast before Vercel 10s timeout
 });
 export const db = drizzle(client, { schema });
