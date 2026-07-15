@@ -118,6 +118,21 @@ export default function CustomerHome() {
 
   const fetchData = async () => {
     setLoading(true);
+    
+    // Diagnostic log
+    console.log('--- API Diagnostic ---');
+    const apiUrl = import.meta.env.VITE_API_URL || '';
+    console.log('VITE_API_URL:', apiUrl);
+    try {
+      console.log(`Fetching from: ${apiUrl}/api/products`);
+      const testRes = await fetch(`${apiUrl}/api/products`);
+      console.log('Response status:', testRes.status);
+      console.log('Response text:', await testRes.clone().text());
+    } catch (err) {
+      console.error('Fetch failed:', err);
+    }
+    console.log('----------------------');
+
     try {
       const [catRes, prodRes] = await Promise.all([
         fetch((import.meta.env.VITE_API_URL || '') + '/api/categories'),
