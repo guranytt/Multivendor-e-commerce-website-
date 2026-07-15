@@ -123,10 +123,16 @@ export default function CustomerHome() {
         fetch((import.meta.env.VITE_API_URL || '') + '/api/categories'),
         fetch((import.meta.env.VITE_API_URL || '') + '/api/products')
       ]);
-      if (catRes.ok) setCategories(await catRes.json());
+      if (catRes.ok) {
+        setCategories(await catRes.json());
+      } else {
+        console.error('Failed to fetch categories:', await catRes.text());
+      }
       if (prodRes.ok) {
         const products = await prodRes.json();
         setTrendingProducts(products.slice(0, 4)); // Just take first 4 as trending
+      } else {
+        console.error('Failed to fetch products:', await prodRes.text());
       }
     } catch (e) {
       console.error(e);

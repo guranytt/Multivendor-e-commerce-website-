@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'path';
-import { createServer as createViteServer } from 'vite';
+
 import rateLimit from 'express-rate-limit';
 
 import categoriesRouter from './src/api/categories';
@@ -112,11 +112,13 @@ app.post('/api/users/make-admin', authLimiter, async (req, res) => {
 
 // Vite middleware for development
 if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
-  createViteServer({
-    server: { middlewareMode: true },
-    appType: 'spa',
-  }).then(vite => {
-    app.use(vite.middlewares);
+  import('vite').then(({ createServer: createViteServer }) => {
+    createViteServer({
+      server: { middlewareMode: true },
+      appType: 'spa',
+    }).then(vite => {
+      app.use(vite.middlewares);
+    }).catch(console.error);
   }).catch(console.error);
 } else {
   const distPath = path.join(process.cwd(), 'dist');
