@@ -46,7 +46,7 @@ export default function CustomerCategories() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/categories');
+      const res = await fetch('/api/categories');
       if (res.ok) setCategories(await res.json());
     } catch (e) {
       console.error(e);
@@ -56,7 +56,7 @@ export default function CustomerCategories() {
   const fetchProducts = async (search = '') => {
     setLoading(true);
     try {
-      const url = search ? (import.meta.env.VITE_API_URL || '') + `/api/products?search=${encodeURIComponent(search)}` : (import.meta.env.VITE_API_URL || '') + '/api/products';
+      const url = search ? `/api/products?search=${encodeURIComponent(search)}` : '/api/products';
       const res = await fetch(url);
       if (res.ok) setProducts(await res.json());
     } catch (e) {

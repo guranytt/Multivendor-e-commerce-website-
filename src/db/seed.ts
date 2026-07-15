@@ -8,10 +8,10 @@ import path from 'path';
 // Load .env
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
-const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL || '';
+const connectionString = process.env.DATABASE_URL || '';
 
 if (!connectionString) {
-  throw new Error('DATABASE_URL or POSTGRES_URL is not set in the environment');
+  throw new Error('DATABASE_URL is not set in the environment');
 }
 
 const client = postgres(connectionString, { prepare: false });

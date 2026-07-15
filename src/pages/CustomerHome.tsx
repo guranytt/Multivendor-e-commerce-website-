@@ -118,36 +118,15 @@ export default function CustomerHome() {
 
   const fetchData = async () => {
     setLoading(true);
-    
-    // Diagnostic log
-    console.log('--- API Diagnostic ---');
-    const apiUrl = import.meta.env.VITE_API_URL || '';
-    console.log('VITE_API_URL:', apiUrl);
-    try {
-      console.log(`Fetching from: ${apiUrl}/api/products`);
-      const testRes = await fetch(`${apiUrl}/api/products`);
-      console.log('Response status:', testRes.status);
-      console.log('Response text:', await testRes.clone().text());
-    } catch (err) {
-      console.error('Fetch failed:', err);
-    }
-    console.log('----------------------');
-
     try {
       const [catRes, prodRes] = await Promise.all([
-        fetch((import.meta.env.VITE_API_URL || '') + '/api/categories'),
-        fetch((import.meta.env.VITE_API_URL || '') + '/api/products')
+        fetch('/api/categories'),
+        fetch('/api/products')
       ]);
-      if (catRes.ok) {
-        setCategories(await catRes.json());
-      } else {
-        console.error('Failed to fetch categories:', await catRes.text());
-      }
+      if (catRes.ok) setCategories(await catRes.json());
       if (prodRes.ok) {
         const products = await prodRes.json();
         setTrendingProducts(products.slice(0, 4)); // Just take first 4 as trending
-      } else {
-        console.error('Failed to fetch products:', await prodRes.text());
       }
     } catch (e) {
       console.error(e);

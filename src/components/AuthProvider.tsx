@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         
         // Sync user to backend
         getToken().then(token => {
-          fetch((import.meta.env.VITE_API_URL || '') + '/api/users/sync', {
+          fetch('/api/users/sync', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

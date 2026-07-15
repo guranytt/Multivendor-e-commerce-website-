@@ -18,7 +18,7 @@ export default function AdminVendors() {
     const token = await getToken();
 
     try {
-      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/vendors', {
+      const res = await fetch('/api/vendors', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -37,7 +37,7 @@ export default function AdminVendors() {
     const token = await getToken();
 
     try {
-      const res = await fetch((import.meta.env.VITE_API_URL || '') + `/api/vendors/${id}/approve`, {
+      const res = await fetch(`/api/vendors/${id}/approve`, {
         method: 'PUT',
         headers: { 'Authorization': `Bearer ${token}` }
       });

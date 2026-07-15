@@ -24,7 +24,7 @@ export default function CustomerLayout({ children }: { children: ReactNode }) {
   const fetchCartCount = async () => {
     const token = await getToken();
     try {
-      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/cart', {
+      const res = await fetch('/api/cart', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -43,7 +43,7 @@ export default function CustomerLayout({ children }: { children: ReactNode }) {
     setPromotionMessage('Elevating your account to Admin...');
     try {
       const token = await getToken();
-      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/users/make-admin', {
+      const res = await fetch('/api/users/make-admin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
