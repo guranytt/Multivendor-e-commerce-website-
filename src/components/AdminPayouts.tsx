@@ -9,7 +9,7 @@ export default function AdminPayouts() {
   const fetchPayouts = async () => {
     const token = await getToken();
     try {
-      const res = await fetch('/api/admin/payouts', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/admin/payouts', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) setPayoutGroups(await res.json());
@@ -30,7 +30,7 @@ export default function AdminPayouts() {
     const token = await getToken();
     
     try {
-      const res = await fetch(`/api/admin/payouts/${vendorId}/pay`, {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + `/api/admin/payouts/${vendorId}/pay`, {
         method: 'POST',
         headers: { 
           'Authorization': `Bearer ${token}`,

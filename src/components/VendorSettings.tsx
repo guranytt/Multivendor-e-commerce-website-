@@ -19,7 +19,7 @@ export default function VendorSettings() {
   const fetchVendorProfile = async () => {
     const token = await getToken();
     try {
-      const res = await fetch('/api/vendors/me', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/vendors/me', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -43,7 +43,7 @@ export default function VendorSettings() {
     setLoading(true);
     const token = await getToken();
     try {
-      const res = await fetch('/api/vendors/me', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/vendors/me', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -18,7 +18,7 @@ export default function CustomerProduct() {
     try {
       // Just fetch all and find, or if there's a specific GET /api/products/:id use it.
       // We don't have GET /api/products/:id currently, we have GET /api/products
-      const res = await fetch('/api/products');
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/products');
       if (res.ok) {
         const all = await res.json();
         const found = all.find((p: any) => p.id === parseInt(id!));
@@ -36,7 +36,7 @@ export default function CustomerProduct() {
     setAddingToCart(true);
     const token = await getToken();
     try {
-      const res = await fetch('/api/cart/items', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/cart/items', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

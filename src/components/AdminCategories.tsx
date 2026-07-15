@@ -19,7 +19,7 @@ export default function AdminCategories() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch('/api/categories');
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/categories');
       if (res.ok) {
         const data = await res.json();
         setCategories(data);
@@ -46,7 +46,7 @@ export default function AdminCategories() {
     };
 
     try {
-      const url = editingId ? `/api/categories/${editingId}` : '/api/categories';
+      const url = editingId ? (import.meta.env.VITE_API_URL || '') + `/api/categories/${editingId}` : (import.meta.env.VITE_API_URL || '') + '/api/categories';
       const method = editingId ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -87,7 +87,7 @@ export default function AdminCategories() {
     const token = await getToken();
 
     try {
-      const res = await fetch(`/api/categories/${id}`, {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + `/api/categories/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` },
       });

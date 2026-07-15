@@ -32,7 +32,7 @@ export default function Storefront() {
   const fetchProducts = async (search = '') => {
     setLoading(true);
     try {
-      const url = search ? `/api/products?search=${encodeURIComponent(search)}` : '/api/products';
+      const url = search ? (import.meta.env.VITE_API_URL || '') + `/api/products?search=${encodeURIComponent(search)}` : (import.meta.env.VITE_API_URL || '') + '/api/products';
       const res = await fetch(url);
       if (res.ok) setProducts(await res.json());
     } catch (e) {
@@ -44,7 +44,7 @@ export default function Storefront() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch('/api/categories');
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/categories');
       if (res.ok) setCategories(await res.json());
     } catch (e) {
       console.error(e);
@@ -54,7 +54,7 @@ export default function Storefront() {
   const fetchCart = async () => {
     const token = await getToken();
     try {
-      const res = await fetch('/api/cart', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/cart', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) setCart(await res.json());
@@ -70,7 +70,7 @@ export default function Storefront() {
     }
     const token = await getToken();
     try {
-      const res = await fetch('/api/cart/items', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/cart/items', {
         method: 'POST',
         headers: { 
           'Authorization': `Bearer ${token}`,
@@ -89,7 +89,7 @@ export default function Storefront() {
   const updateCartItem = async (itemId: number, quantity: number) => {
     const token = await getToken();
     try {
-      await fetch(`/api/cart/items/${itemId}`, {
+      await fetch((import.meta.env.VITE_API_URL || '') + `/api/cart/items/${itemId}`, {
         method: 'PUT',
         headers: { 
           'Authorization': `Bearer ${token}`,
@@ -106,7 +106,7 @@ export default function Storefront() {
   const handleCheckout = async () => {
     const token = await getToken();
     try {
-      const res = await fetch('/api/checkout/simulate-payment', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/checkout/simulate-payment', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

@@ -14,7 +14,7 @@ export default function CustomerCart() {
   const fetchCart = async () => {
     const token = await getToken();
     try {
-      const res = await fetch('/api/cart', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/cart', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) setCart(await res.json());
@@ -29,12 +29,12 @@ export default function CustomerCart() {
     const token = await getToken();
     try {
       if (quantity === 0) {
-        await fetch(`/api/cart/items/${itemId}`, {
+        await fetch((import.meta.env.VITE_API_URL || '') + `/api/cart/items/${itemId}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` }
         });
       } else {
-        await fetch(`/api/cart/items/${itemId}`, {
+        await fetch((import.meta.env.VITE_API_URL || '') + `/api/cart/items/${itemId}`, {
           method: 'PUT',
           headers: { 
             'Authorization': `Bearer ${token}`,
@@ -52,7 +52,7 @@ export default function CustomerCart() {
   const handleCheckout = async () => {
     const token = await getToken();
     try {
-      const res = await fetch('/api/checkout/simulate-payment', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/checkout/simulate-payment', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

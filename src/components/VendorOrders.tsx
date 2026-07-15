@@ -13,7 +13,7 @@ export default function VendorOrders() {
   const fetchVendorStatus = async () => {
     const token = await getToken();
     try {
-      const res = await fetch('/api/vendors/me', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/vendors/me', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -30,7 +30,7 @@ export default function VendorOrders() {
 
   const fetchOrders = async (token: string) => {
     try {
-      const res = await fetch('/api/vendors/orders', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/vendors/orders', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) setOrders(await res.json());
@@ -42,7 +42,7 @@ export default function VendorOrders() {
   const updateStatus = async (id: number, status: string) => {
     const token = await getToken();
     try {
-      const res = await fetch(`/api/vendors/orders/${id}/status`, {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + `/api/vendors/orders/${id}/status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

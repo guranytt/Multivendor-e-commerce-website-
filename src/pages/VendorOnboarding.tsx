@@ -20,7 +20,7 @@ export default function VendorOnboarding() {
     const token = await getToken();
 
     try {
-      const res = await fetch('/api/vendors/onboard', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/vendors/onboard', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

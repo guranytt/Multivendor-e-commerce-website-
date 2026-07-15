@@ -43,7 +43,7 @@ export default function VendorProducts() {
   const fetchVendorStatus = async () => {
     const token = await getToken();
     try {
-      const res = await fetch('/api/vendors/me', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/vendors/me', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -60,7 +60,7 @@ export default function VendorProducts() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch('/api/categories');
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/categories');
       if (res.ok) setCategories(await res.json());
     } catch (e) {
       console.error(e);
@@ -69,7 +69,7 @@ export default function VendorProducts() {
 
   const fetchProducts = async (token: string) => {
     try {
-      const res = await fetch('/api/products/me', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/products/me', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) setProducts(await res.json());
@@ -94,7 +94,7 @@ export default function VendorProducts() {
     };
 
     try {
-      const url = editingId ? `/api/products/${editingId}` : '/api/products';
+      const url = editingId ? (import.meta.env.VITE_API_URL || '') + `/api/products/${editingId}` : (import.meta.env.VITE_API_URL || '') + '/api/products';
       const method = editingId ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -143,7 +143,7 @@ export default function VendorProducts() {
       const formData = new FormData();
       formData.append('file', file);
       
-      const res = await fetch('/api/products/upload', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/products/upload', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

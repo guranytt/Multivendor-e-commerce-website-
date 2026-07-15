@@ -120,8 +120,8 @@ export default function CustomerHome() {
     setLoading(true);
     try {
       const [catRes, prodRes] = await Promise.all([
-        fetch('/api/categories'),
-        fetch('/api/products')
+        fetch((import.meta.env.VITE_API_URL || '') + '/api/categories'),
+        fetch((import.meta.env.VITE_API_URL || '') + '/api/products')
       ]);
       if (catRes.ok) setCategories(await catRes.json());
       if (prodRes.ok) {
